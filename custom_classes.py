@@ -9,3 +9,7 @@ class Calculator:
         def subtract(self, x, y):
         self._current_val = x - y
         return self._current_val
+
+        def multiply(self, x, y):
+        self._current_val = x * y
+        return self._current_val
