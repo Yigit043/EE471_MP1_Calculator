@@ -51,3 +51,9 @@ Example with curl:
 ```
 curl -X POST http://127.0.0.1:5000/api/calculate -H "Content-Type: application/json" -d "{\"a\": 10, \"op\": \"+\", \"b\": 5}"
 ```
+
+## Section 2 – Part 1: Library App Figma Design (bonus)
+
+Figma (view-only): https://www.figma.com/design/zVe5WMORIavA4ihry0FLMm/EE471-Week4-Library?node-id=2-2&t=K84LFk1KQJWkVATH-1
+
+![Library design](design/library.png)
