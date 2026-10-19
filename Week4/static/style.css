@@ -1,0 +1,79 @@
+/* Colours taken from the Figma design (design/calculator.png) */
+:root {
+  --body-blue: #1E73BE;
+  --key-gray: #808080;
+  --key-blue: #4A90D9;
+  --key-dark-blue: #0B4F9C;
+  --display-bg: #FFFFFF;
+  --text-light: #FFFFFF;
+  --text-dark: #000000;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #F5F5F5;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+/* Vertical auto-layout: display on top, four rows below */
+.calculator {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--body-blue);
+  border-radius: 4px;
+}
+
+.display {
+  display: block;
+  width: 100%;
+  min-height: 72px;
+  padding: 12px 14px;
+  background: var(--display-bg);
+  color: var(--text-dark);
+  font-size: 40px;
+  font-weight: 700;
+  text-align: right;
+  line-height: 48px;
+  border-radius: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.display.is-error {
+  color: #C62828;
+  font-size: 18px;
+  line-height: 24px;
+  white-space: normal;
+}
+
+/* Horizontal auto-layout: four keys per row */
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.key {
+  width: 60px;
+  height: 60px;
+  border: none;
+  border-radius: 6px;
+  background: var(--key-gray);
+  color: var(--text-light);
+  font: inherit;
+  font-size: 26px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.key:hover  { filter: brightness(1.1); }
+.key:active { filter: brightness(0.9); }
+
+.key--op     { background: var(--key-blue); }
+.key--equals { background: var(--key-dark-blue); }
