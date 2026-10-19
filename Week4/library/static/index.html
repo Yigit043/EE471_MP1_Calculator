@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Library</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <h1>Library</h1>
+
+    <!-- Error area: shows API error messages (e.g. 409 on delete) -->
+    <div id="error-area" class="error-area" hidden></div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <label class="toggle">
+        <input type="checkbox" id="filter-available">
+        Available only
+      </label>
+      <div class="segmented" id="filter-type">
+        <button type="button" data-type="" class="is-active">All</button>
+        <button type="button" data-type="book">Book</button>
+        <button type="button" data-type="dvd">DVD</button>
+      </div>
+    </div>
+
+    <!-- Add / Edit form -->
+    <form id="item-form" class="form">
+      <strong id="form-title">Add item</strong>
+      <div class="form-row">
+        <input type="text"   id="f-title"  placeholder="Title">
+        <input type="text"   id="f-author" placeholder="Author">
+        <select id="f-type">
+          <option value="book">Book</option>
+          <option value="dvd">DVD</option>
+        </select>
+        <input type="number" id="f-extra" placeholder="Page count">
+        <button type="submit" id="f-submit" class="btn btn--primary">Add</button>
+        <button type="button" id="f-cancel" class="btn btn--ghost" hidden>Cancel</button>
+      </div>
+    </form>
+
+    <!-- Item list -->
+    <div id="item-list" class="item-list"></div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="empty-state" hidden>
+      No items yet. Add your first book or DVD above.
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

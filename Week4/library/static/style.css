@@ -1,0 +1,122 @@
+/* Colours and spacing follow the Figma design (design/library.png) */
+:root {
+  --blue: #1E73BE;
+  --blue-light: #E8F0FE;
+  --gray-100: #F9FAFB;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --text: #111111;
+  --green-bg: #DCFCE7; --green-fg: #166534;
+  --amber-bg: #FEF3C7; --amber-fg: #92400E;
+  --red-bg: #FDECEA;   --red-fg: #C62828;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #F5F5F5;
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.page {
+  width: 900px;
+  max-width: 100%;
+  margin: 24px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+h1 { margin: 0; font-size: 24px; }
+
+/* --- error area ----------------------------------------------------- */
+.error-area {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--red-bg);
+  color: var(--red-fg);
+  font-weight: 600;
+}
+
+/* --- filters -------------------------------------------------------- */
+.filters { display: flex; align-items: center; gap: 16px; }
+
+.toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: var(--blue-light);
+  color: var(--blue);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.segmented { display: flex; gap: 4px; }
+.segmented button {
+  padding: 6px 14px;
+  border: none; border-radius: 6px;
+  background: var(--gray-200); color: var(--text);
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+.segmented button.is-active { background: var(--blue); color: #fff; }
+
+/* --- form ----------------------------------------------------------- */
+.form {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px;
+  background: var(--gray-100);
+  border-radius: 8px;
+}
+.form-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.form-row input, .form-row select {
+  width: 180px; height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--gray-300); border-radius: 6px;
+  background: #fff; font: inherit;
+}
+
+.btn {
+  padding: 8px 18px;
+  border: none; border-radius: 6px;
+  font: inherit; font-weight: 700; cursor: pointer;
+}
+.btn--primary { background: var(--blue); color: #fff; }
+.btn--ghost   { background: var(--gray-200); color: var(--text); }
+.btn--return  { background: var(--gray-500); color: #fff; }
+.btn--icon    { background: none; padding: 4px 6px; font-size: 16px; color: var(--gray-600); }
+
+/* --- item list ------------------------------------------------------ */
+.item-list { display: flex; flex-direction: column; gap: 8px; }
+
+.item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px;
+  border: 1px solid var(--gray-200); border-radius: 8px;
+}
+.item__title  { width: 200px; font-weight: 700; }
+.item__author { width: 160px; color: var(--gray-600); }
+.item__extra  { width: 100px; color: var(--gray-600); }
+.chip  { padding: 2px 8px; border-radius: 4px; background: var(--gray-200); font-weight: 600; }
+.badge { padding: 2px 8px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+.badge--available { background: var(--green-bg); color: var(--green-fg); }
+.badge--out       { background: var(--amber-bg); color: var(--amber-fg); }
+.item .btn { padding: 6px 12px; }
+.item__actions { margin-left: auto; display: flex; gap: 6px; align-items: center; }
+
+/* --- empty state ---------------------------------------------------- */
+.empty-state {
+  padding: 32px;
+  text-align: center;
+  color: var(--gray-500);
+  background: var(--gray-100);
+  border: 1px dashed var(--gray-200);
+  border-radius: 8px;
+}

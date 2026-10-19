@@ -57,3 +57,14 @@ curl -X POST http://127.0.0.1:5000/api/calculate -H "Content-Type: application/j
 Figma (view-only): https://www.figma.com/design/zVe5WMORIavA4ihry0FLMm/EE471-Week4-Library?node-id=2-2&t=K84LFk1KQJWkVATH-1
 
 ![Library design](design/library.png)
+## Section 2 – Part 2: CRUD methods
+
+`library/custom_classes.py`: exceptions, unique ids, `to_dict()`, CRUD methods on `LibraryCollection`.
+`library/main.py` calls every method and triggers every exception.
+
+Run: `python library/main.py`
+## Section 2 – Part 4: Frontend
+
+`library/static/` (index.html, style.css, script.js) is served by Flask at http://127.0.0.1:5000.
+Every action calls the REST API; API error messages (e.g. 409 on deleting a checked-out item)
+are shown in the error area. Prompts and fixes: `library/PROMPTS.md`.
