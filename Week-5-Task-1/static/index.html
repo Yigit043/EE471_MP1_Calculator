@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech-to-Text</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>🎤 Speech-to-Text</h1>
+    <p class="subtitle">Powered by Azure Cognitive Services</p>
+
+    <label>Record or upload audio to convert to text:</label>
+    <div class="buttons">
+      <button id="stt-start" class="btn btn--primary">🎙️ Start Recording</button>
+      <button id="stt-stop" class="btn btn--red" disabled>⏹️ Stop Recording</button>
+    </div>
+    <input id="stt-file" type="file" accept="audio/*">
+
+    <label for="stt-language">Language:</label>
+    <select id="stt-language"></select>
+
+    <div id="stt-recording" class="status status--recording" hidden>● Recording…</div>
+
+    <div class="buttons">
+      <button id="stt-transcribe" class="btn btn--primary" disabled>📝 Transcribe Audio</button>
+      <button id="stt-clear" class="btn btn--light">Clear</button>
+    </div>
+
+    <section id="stt-result" class="result result--blue" hidden>
+      <h2>Transcription:</h2>
+      <p id="stt-text" class="transcript"></p>
+      <button id="stt-copy" class="btn btn--light btn--small">📋 Copy Text</button>
+    </section>
+
+    <div id="stt-status" class="status" hidden></div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
