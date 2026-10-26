@@ -1,116 +1,52 @@
-// Azure Speech website (merged in Part 3).
-// Tab 1 - Text to Speech: sends text to Flask (/api/tts), plays and offers the WAV it returns.
-// Tab 2 - Speech to Text: records the microphone or takes a file, converts it in the browser
-//         to a 16 kHz mono WAV, sends it to Flask (/api/stt) and shows the transcription.
+// Azure Speech website.
+// Every tab sends its data to the Flask backend (app.py); all speech work happens on Azure.
+// Audio (microphone recordings and uploaded files) is converted in the browser to a
+// 16 kHz mono WAV before it is sent, because that is the format Azure reads directly.
 
-// ---------------------------------------------------------------------------
+// ===========================================================================
 // Shared helpers
-// ---------------------------------------------------------------------------
+// ===========================================================================
+const $ = (id) => document.getElementById(id);
+
 function showStatus(el, message, kind) {
   el.textContent = message;
   el.className = `status status--${kind}`;
   el.hidden = false;
 }
 
-// ---------------------------------------------------------------------------
-// Tabs
-// ---------------------------------------------------------------------------
-document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("is-active", t === tab));
-    document.querySelectorAll(".panel").forEach((panel) => {
-      panel.hidden = panel.id !== `panel-${tab.dataset.tab}`;
-    });
-  });
-});
-
-// ===========================================================================
-// TEXT TO SPEECH
-// ===========================================================================
-const ttsText = document.getElementById("tts-text");
-const ttsVoice = document.getElementById("tts-voice");
-const ttsSpeak = document.getElementById("tts-speak");
-const ttsClear = document.getElementById("tts-clear");
-const ttsStatus = document.getElementById("tts-status");
-const ttsResult = document.getElementById("tts-result");
-const ttsAudio = document.getElementById("tts-audio");
-const ttsDownload = document.getElementById("tts-download");
-
-let audioUrl = null;   // object URL of the last generated WAV
-
-
-// Fill the voice dropdown from the server
-async function loadVoices() {
-  const response = await fetch("/api/voices");
-  const voices = await response.json();
-  for (const [id, label] of voices) {
+function fillSelect(select, pairs) {
+  for (const [value, label] of pairs) {
     const option = document.createElement("option");
-    option.value = id;
+    option.value = value;
     option.textContent = label;
-    ttsVoice.appendChild(option);
+    select.appendChild(option);
   }
 }
 
-async function synthesize() {
-  ttsSpeak.disabled = true;
-  showStatus(ttsStatus, "Synthesizing…", "busy");
+// POST a WAV (+ extra form fields) to an endpoint; return the JSON or throw the API's error.
+async function postAudio(url, blob, fields = {}) {
+  const form = new FormData();
+  form.append("audio", await toWav(blob), "audio.wav");
+  for (const [key, value] of Object.entries(fields)) form.append(key, value);
+  const response = await fetch(url, { method: "POST", body: form });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+  return data;
+}
 
+// Run an async task with a busy message and a disabled button; show ok/error at the end.
+async function runTask(button, statusEl, busyText, okText, task) {
+  button.disabled = true;
+  showStatus(statusEl, busyText, "busy");
   try {
-    const response = await fetch("/api/tts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ text: ttsText.value, voice: ttsVoice.value }),
-    });
-    if (!response.ok) {
-      const data = await response.json();
-      throw new Error(data.error || `HTTP ${response.status}`);
-    }
-
-    const blob = await response.blob();               // the WAV bytes
-    if (audioUrl) URL.revokeObjectURL(audioUrl);
-    audioUrl = URL.createObjectURL(blob);
-    ttsAudio.src = audioUrl;
-    ttsDownload.href = audioUrl;
-    ttsResult.hidden = false;
-    ttsAudio.play();
-    showStatus(ttsStatus, "✓ Speech synthesized successfully!", "ok");
+    await task();
+    showStatus(statusEl, okText, "ok");
   } catch (err) {
-    showStatus(ttsStatus, `✗ ${err.message}`, "error");
+    showStatus(statusEl, `✗ ${err.message}`, "error");
   } finally {
-    ttsSpeak.disabled = false;
+    button.disabled = false;
   }
 }
-
-function clearTts() {
-  ttsText.value = "";
-  ttsStatus.hidden = true;
-  ttsResult.hidden = true;
-  ttsAudio.removeAttribute("src");
-}
-
-ttsSpeak.addEventListener("click", synthesize);
-ttsClear.addEventListener("click", clearTts);
-loadVoices();
-
-// ===========================================================================
-// SPEECH TO TEXT
-// ===========================================================================
-const sttStart = document.getElementById("stt-start");
-const sttStop = document.getElementById("stt-stop");
-const sttFile = document.getElementById("stt-file");
-const sttLanguage = document.getElementById("stt-language");
-const sttRecording = document.getElementById("stt-recording");
-const sttTranscribe = document.getElementById("stt-transcribe");
-const sttClear = document.getElementById("stt-clear");
-const sttResult = document.getElementById("stt-result");
-const sttText = document.getElementById("stt-text");
-const sttCopy = document.getElementById("stt-copy");
-const sttStatus = document.getElementById("stt-status");
-
-let mediaRecorder = null;
-let recordedChunks = [];
-let audioBlob = null;     // the audio waiting to be transcribed (recording or upload)
-
 
 // ---------------------------------------------------------------------------
 // Audio -> 16 kHz mono 16-bit WAV
@@ -162,93 +98,286 @@ function encodeWav(samples, sampleRate) {
 }
 
 // ---------------------------------------------------------------------------
-// Recording
+// Reusable "record or upload" control. Every audio tab has the same four elements:
+// <prefix>-start, <prefix>-stop, <prefix>-file, <prefix>-recording, and a <prefix>-run button.
 // ---------------------------------------------------------------------------
-async function startRecording() {
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    recordedChunks = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = (e) => recordedChunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      stream.getTracks().forEach((t) => t.stop());          // release the microphone
-      audioBlob = new Blob(recordedChunks, { type: mediaRecorder.mimeType });
-      sttRecording.hidden = true;
-      sttTranscribe.disabled = false;
-      showStatus(sttStatus, "Recording ready – press Transcribe Audio.", "busy");
-    };
-    mediaRecorder.start();
-    sttFile.value = "";
-    sttStart.disabled = true;
-    sttStop.disabled = false;
-    sttRecording.hidden = false;
-    sttStatus.hidden = true;
-  } catch (err) {
-    showStatus(sttStatus, `✗ Microphone not available: ${err.message}`, "error");
-  }
+function createAudioInput(prefix, statusEl) {
+  const start = $(`${prefix}-start`);
+  const stop = $(`${prefix}-stop`);
+  const file = $(`${prefix}-file`);
+  const recording = $(`${prefix}-recording`);
+  const run = $(`${prefix}-run`);
+  let recorder = null;
+  let chunks = [];
+  const input = { blob: null };
+
+  input.set = (blob, message) => {
+    input.blob = blob;
+    run.disabled = !blob;
+    if (blob && message) showStatus(statusEl, message, "busy");
+  };
+
+  start.addEventListener("click", async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      chunks = [];
+      recorder = new MediaRecorder(stream);
+      recorder.ondataavailable = (e) => chunks.push(e.data);
+      recorder.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());          // release the microphone
+        recording.hidden = true;
+        input.set(new Blob(chunks, { type: recorder.mimeType }), "Recording ready.");
+      };
+      recorder.start();
+      file.value = "";
+      start.disabled = true;
+      stop.disabled = false;
+      recording.hidden = false;
+      statusEl.hidden = true;
+    } catch (err) {
+      showStatus(statusEl, `✗ Microphone not available: ${err.message}`, "error");
+    }
+  });
+
+  stop.addEventListener("click", () => {
+    if (recorder && recorder.state === "recording") recorder.stop();
+    start.disabled = false;
+    stop.disabled = true;
+  });
+
+  file.addEventListener("change", () => {
+    const chosen = file.files[0] || null;
+    input.set(chosen, chosen ? `File selected: ${chosen.name}` : null);
+  });
+
+  input.clear = () => {
+    file.value = "";
+    input.set(null);
+    statusEl.hidden = true;
+  };
+  return input;
 }
 
-function stopRecording() {
-  if (mediaRecorder && mediaRecorder.state === "recording") mediaRecorder.stop();
-  sttStart.disabled = false;
-  sttStop.disabled = true;
-}
-
-// ---------------------------------------------------------------------------
-// Transcription
-// ---------------------------------------------------------------------------
-async function transcribe() {
-  if (!audioBlob) return;
-  sttTranscribe.disabled = true;
-  showStatus(sttStatus, "Transcribing…", "busy");
-
-  try {
-    const wav = await toWav(audioBlob);
-    const form = new FormData();
-    form.append("audio", wav, "audio.wav");
-    form.append("language", sttLanguage.value);
-
-    const response = await fetch("/api/stt", { method: "POST", body: form });
-    const data = await response.json();
-    if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
-
-    sttText.textContent = data.text;
-    sttResult.hidden = false;
-    showStatus(sttStatus, "✓ Audio transcribed successfully!", "ok");
-  } catch (err) {
-    showStatus(sttStatus, `✗ ${err.message}`, "error");
-  } finally {
-    sttTranscribe.disabled = false;
-  }
-}
-
-function clearStt() {
-  audioBlob = null;
-  sttFile.value = "";
-  sttText.textContent = "";
-  sttResult.hidden = true;
-  sttStatus.hidden = true;
-  sttTranscribe.disabled = true;
-}
-
-async function loadLanguages() {
-  const response = await fetch("/api/languages");
-  for (const [code, label] of await response.json()) {
-    const option = document.createElement("option");
-    option.value = code;
-    option.textContent = label;
-    sttLanguage.appendChild(option);
-  }
-}
-
-sttStart.addEventListener("click", startRecording);
-sttStop.addEventListener("click", stopRecording);
-sttFile.addEventListener("change", () => {
-  audioBlob = sttFile.files[0] || null;
-  sttTranscribe.disabled = !audioBlob;
-  if (audioBlob) showStatus(sttStatus, `File selected: ${audioBlob.name}`, "busy");
+// ===========================================================================
+// Tabs
+// ===========================================================================
+document.querySelectorAll(".tab").forEach((tab) => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("is-active", t === tab));
+    document.querySelectorAll(".panel").forEach((panel) => {
+      panel.hidden = panel.id !== `panel-${tab.dataset.tab}`;
+    });
+  });
 });
-sttTranscribe.addEventListener("click", transcribe);
-sttClear.addEventListener("click", clearStt);
-sttCopy.addEventListener("click", () => navigator.clipboard.writeText(sttText.textContent));
-loadLanguages();
+
+// ===========================================================================
+// TEXT TO SPEECH (Part 1)
+// ===========================================================================
+let ttsUrl = null;   // object URL of the last generated WAV
+
+async function fetchSpeech(text, voice) {
+  const response = await fetch("/api/tts", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, voice }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.error || `HTTP ${response.status}`);
+  }
+  return response.blob();                            // the WAV bytes
+}
+
+$("tts-speak").addEventListener("click", () =>
+  runTask($("tts-speak"), $("tts-status"), "Synthesizing…", "✓ Speech synthesized successfully!",
+    async () => {
+      const blob = await fetchSpeech($("tts-text").value, $("tts-voice").value);
+      if (ttsUrl) URL.revokeObjectURL(ttsUrl);
+      ttsUrl = URL.createObjectURL(blob);
+      $("tts-audio").src = ttsUrl;
+      $("tts-download").href = ttsUrl;
+      $("tts-result").hidden = false;
+      $("tts-audio").play();
+    }));
+
+$("tts-clear").addEventListener("click", () => {
+  $("tts-text").value = "";
+  $("tts-status").hidden = true;
+  $("tts-result").hidden = true;
+  $("tts-audio").removeAttribute("src");
+});
+
+// ===========================================================================
+// SPEECH TO TEXT (Part 2)
+// ===========================================================================
+const sttInput = createAudioInput("stt", $("stt-status"));
+
+$("stt-run").addEventListener("click", () =>
+  runTask($("stt-run"), $("stt-status"), "Transcribing…", "✓ Audio transcribed successfully!",
+    async () => {
+      const data = await postAudio("/api/stt", sttInput.blob, { language: $("stt-language").value });
+      $("stt-text").textContent = data.text;
+      $("stt-result").hidden = false;
+    }));
+
+$("stt-clear").addEventListener("click", () => {
+  sttInput.clear();
+  $("stt-text").textContent = "";
+  $("stt-result").hidden = true;
+});
+$("stt-copy").addEventListener("click", () => navigator.clipboard.writeText($("stt-text").textContent));
+
+// ===========================================================================
+// DIARIZATION (Part 4)
+// ===========================================================================
+const diaInput = createAudioInput("dia", $("dia-status"));
+const SPEAKER_COLORS = ["#667eea", "#e67e22", "#16a085", "#c0392b", "#8e44ad"];
+
+$("dia-sample").addEventListener("click", () =>
+  runTask($("dia-sample"), $("dia-status"), "Generating conversation…",
+    "✓ Sample ready – listen to it, then press Identify Speakers.",
+    async () => {
+      const response = await fetch("/api/sample-conversation", { method: "POST" });
+      if (!response.ok) throw new Error((await response.json()).error);
+      const blob = await response.blob();
+      diaInput.set(blob);
+      $("dia-audio").src = URL.createObjectURL(blob);
+      $("dia-audio").hidden = false;
+    }));
+
+$("dia-run").addEventListener("click", () =>
+  runTask($("dia-run"), $("dia-status"), "Identifying speakers…", "✓ Diarization finished!",
+    async () => {
+      const data = await postAudio("/api/diarize", diaInput.blob, { language: $("dia-language").value });
+      const colors = {};
+      const box = $("dia-segments");
+      box.innerHTML = "";
+      for (const seg of data.segments) {
+        if (!(seg.speaker in colors)) {
+          colors[seg.speaker] = SPEAKER_COLORS[Object.keys(colors).length % SPEAKER_COLORS.length];
+        }
+        const row = document.createElement("div");
+        row.className = "segment";
+        const who = document.createElement("span");
+        who.className = "speaker";
+        who.style.background = colors[seg.speaker];
+        who.textContent = seg.speaker;
+        const said = document.createElement("p");
+        said.textContent = seg.text;
+        row.append(who, said);
+        box.appendChild(row);
+      }
+      $("dia-result").hidden = false;
+    }));
+
+$("dia-clear").addEventListener("click", () => {
+  diaInput.clear();
+  $("dia-segments").innerHTML = "";
+  $("dia-result").hidden = true;
+  $("dia-audio").hidden = true;
+});
+
+// ===========================================================================
+// TRANSLATION (Part 4)
+// ===========================================================================
+const trInput = createAudioInput("tr", $("tr-status"));
+let trVoice = null;   // voice suggested by the server for the target language
+
+$("tr-run").addEventListener("click", () =>
+  runTask($("tr-run"), $("tr-status"), "Translating…", "✓ Translation finished!",
+    async () => {
+      const data = await postAudio("/api/translate", trInput.blob, {
+        source: $("tr-source").value,
+        target: $("tr-target").value,
+      });
+      $("tr-original").textContent = data.original;
+      $("tr-translation").textContent = data.translation;
+      trVoice = data.voice;
+      $("tr-result").hidden = false;
+    }));
+
+// Reuses the Part 1 text-to-speech endpoint to read the translation aloud
+$("tr-speak").addEventListener("click", () =>
+  runTask($("tr-speak"), $("tr-status"), "Synthesizing translation…", "✓ Playing translation.",
+    async () => {
+      const blob = await fetchSpeech($("tr-translation").textContent, trVoice);
+      $("tr-audio").src = URL.createObjectURL(blob);
+      await $("tr-audio").play();
+    }));
+
+$("tr-clear").addEventListener("click", () => {
+  trInput.clear();
+  $("tr-original").textContent = "";
+  $("tr-translation").textContent = "";
+  $("tr-result").hidden = true;
+});
+
+// ===========================================================================
+// PRONUNCIATION ASSESSMENT (Part 4)
+// ===========================================================================
+const paInput = createAudioInput("pa", $("pa-status"));
+
+function wordClass(word) {
+  if (word.error === "Omission") return "word--omission";
+  if (word.error === "Insertion") return "word--insertion";
+  if (word.accuracy >= 80) return "word--good";
+  if (word.accuracy >= 60) return "word--ok";
+  return "word--bad";
+}
+
+$("pa-run").addEventListener("click", () =>
+  runTask($("pa-run"), $("pa-status"), "Assessing pronunciation…", "✓ Assessment finished!",
+    async () => {
+      const data = await postAudio("/api/pronunciation", paInput.blob, {
+        reference: $("pa-reference").value,
+        language: $("pa-language").value,
+      });
+
+      const scores = [
+        ["Pronunciation", data.pronunciation],
+        ["Accuracy", data.accuracy],
+        ["Fluency", data.fluency],
+        ["Completeness", data.completeness],
+        ["Prosody", data.prosody],
+      ];
+      const scoreBox = $("pa-scores");
+      scoreBox.innerHTML = "";
+      for (const [name, value] of scores) {
+        if (value === null || value === undefined) continue;      // prosody: en-US only
+        const card = document.createElement("div");
+        card.className = "score";
+        card.innerHTML = `<b>${Math.round(value)}</b><span>${name}</span>`;
+        scoreBox.appendChild(card);
+      }
+
+      const wordBox = $("pa-words");
+      wordBox.innerHTML = "";
+      for (const w of data.words) {
+        const chip = document.createElement("span");
+        chip.className = `word ${wordClass(w)}`;
+        chip.textContent = w.word;
+        const small = document.createElement("small");
+        small.textContent = w.error === "None" ? Math.round(w.accuracy) : w.error;
+        chip.appendChild(small);
+        wordBox.appendChild(chip);
+      }
+      $("pa-result").hidden = false;
+    }));
+
+$("pa-clear").addEventListener("click", () => {
+  paInput.clear();
+  $("pa-scores").innerHTML = "";
+  $("pa-words").innerHTML = "";
+  $("pa-result").hidden = true;
+});
+
+// ===========================================================================
+// Start-up: fill every dropdown from the server
+// ===========================================================================
+(async () => {
+  const options = await (await fetch("/api/options")).json();
+  fillSelect($("tts-voice"), options.voices);
+  for (const id of ["stt-language", "dia-language", "tr-source"]) fillSelect($(id), options.languages);
+  fillSelect($("tr-target"), options.targets);
+  fillSelect($("pa-language"), options.pronunciation);
+})();

@@ -9,14 +9,17 @@
 <body>
   <main class="card">
     <h1>🎤 Azure Speech Services</h1>
-    <p class="subtitle">Text-to-Speech &amp; Speech-to-Text powered by Azure Cognitive Services</p>
+    <p class="subtitle">Speech synthesis, recognition, diarization, translation and pronunciation assessment powered by Azure</p>
 
     <nav class="tabs">
       <button class="tab is-active" data-tab="tts">Text to Speech</button>
       <button class="tab" data-tab="stt">Speech to Text</button>
+      <button class="tab" data-tab="dia">Diarization</button>
+      <button class="tab" data-tab="tr">Translation</button>
+      <button class="tab" data-tab="pa">Pronunciation</button>
     </nav>
 
-    <!-- ===================== Text to Speech ===================== -->
+    <!-- ===================== Text to Speech (Part 1) ===================== -->
     <section id="panel-tts" class="panel">
       <label for="tts-text">Enter text to convert to speech:</label>
       <textarea id="tts-text" rows="5" placeholder="Hello, EE471 class"></textarea>
@@ -38,7 +41,7 @@
       </section>
     </section>
 
-    <!-- ===================== Speech to Text ===================== -->
+    <!-- ===================== Speech to Text (Part 2) ===================== -->
     <section id="panel-stt" class="panel" hidden>
       <label>Record or upload audio to convert to text:</label>
       <div class="buttons">
@@ -46,14 +49,13 @@
         <button id="stt-stop" class="btn btn--red" disabled>⏹️ Stop Recording</button>
       </div>
       <input id="stt-file" type="file" accept="audio/*">
+      <div id="stt-recording" class="status status--recording" hidden>● Recording…</div>
 
       <label for="stt-language">Language:</label>
       <select id="stt-language"></select>
 
-      <div id="stt-recording" class="status status--recording" hidden>● Recording…</div>
-
       <div class="buttons">
-        <button id="stt-transcribe" class="btn btn--primary" disabled>📝 Transcribe Audio</button>
+        <button id="stt-run" class="btn btn--primary" disabled>📝 Transcribe Audio</button>
         <button id="stt-clear" class="btn btn--light">Clear</button>
       </div>
 
@@ -64,6 +66,109 @@
       </section>
 
       <div id="stt-status" class="status" hidden></div>
+    </section>
+
+    <!-- ===================== Diarization (Part 4) ===================== -->
+    <section id="panel-dia" class="panel" hidden>
+      <label>Record or upload a conversation with two or more speakers:</label>
+      <div class="buttons">
+        <button id="dia-start" class="btn btn--primary">🎙️ Start Recording</button>
+        <button id="dia-stop" class="btn btn--red" disabled>⏹️ Stop Recording</button>
+      </div>
+      <input id="dia-file" type="file" accept="audio/*">
+      <div id="dia-recording" class="status status--recording" hidden>● Recording…</div>
+      <button id="dia-sample" class="btn btn--light">🎭 Generate a sample two-person conversation</button>
+      <audio id="dia-audio" controls hidden></audio>
+
+      <label for="dia-language">Language:</label>
+      <select id="dia-language"></select>
+
+      <div class="buttons">
+        <button id="dia-run" class="btn btn--primary" disabled>👥 Identify Speakers</button>
+        <button id="dia-clear" class="btn btn--light">Clear</button>
+      </div>
+
+      <section id="dia-result" class="result result--blue" hidden>
+        <h2>Who said what:</h2>
+        <div id="dia-segments" class="segments"></div>
+      </section>
+
+      <div id="dia-status" class="status" hidden></div>
+    </section>
+
+    <!-- ===================== Translation (Part 4) ===================== -->
+    <section id="panel-tr" class="panel" hidden>
+      <label>Record or upload speech to translate:</label>
+      <div class="buttons">
+        <button id="tr-start" class="btn btn--primary">🎙️ Start Recording</button>
+        <button id="tr-stop" class="btn btn--red" disabled>⏹️ Stop Recording</button>
+      </div>
+      <input id="tr-file" type="file" accept="audio/*">
+      <div id="tr-recording" class="status status--recording" hidden>● Recording…</div>
+
+      <div class="two-cols">
+        <div>
+          <label for="tr-source">Spoken language:</label>
+          <select id="tr-source"></select>
+        </div>
+        <div>
+          <label for="tr-target">Translate to:</label>
+          <select id="tr-target"></select>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button id="tr-run" class="btn btn--primary" disabled>🌍 Translate</button>
+        <button id="tr-clear" class="btn btn--light">Clear</button>
+      </div>
+
+      <section id="tr-result" class="result result--blue" hidden>
+        <h2>Original:</h2>
+        <p id="tr-original" class="transcript"></p>
+        <h2 class="mt">Translation:</h2>
+        <p id="tr-translation" class="transcript"></p>
+        <button id="tr-speak" class="btn btn--light btn--small">🔊 Speak Translation</button>
+        <audio id="tr-audio" hidden></audio>
+      </section>
+
+      <div id="tr-status" class="status" hidden></div>
+    </section>
+
+    <!-- ===================== Pronunciation assessment (Part 4) ===================== -->
+    <section id="panel-pa" class="panel" hidden>
+      <label for="pa-reference">Sentence to read aloud:</label>
+      <textarea id="pa-reference" rows="2">The quick brown fox jumps over the lazy dog.</textarea>
+
+      <label>Record yourself reading the sentence (or upload a file):</label>
+      <div class="buttons">
+        <button id="pa-start" class="btn btn--primary">🎙️ Start Recording</button>
+        <button id="pa-stop" class="btn btn--red" disabled>⏹️ Stop Recording</button>
+      </div>
+      <input id="pa-file" type="file" accept="audio/*">
+      <div id="pa-recording" class="status status--recording" hidden>● Recording…</div>
+
+      <label for="pa-language">Language:</label>
+      <select id="pa-language"></select>
+
+      <div class="buttons">
+        <button id="pa-run" class="btn btn--primary" disabled>🎯 Assess Pronunciation</button>
+        <button id="pa-clear" class="btn btn--light">Clear</button>
+      </div>
+
+      <section id="pa-result" class="result result--blue" hidden>
+        <h2>Scores (0 – 100):</h2>
+        <div id="pa-scores" class="scores"></div>
+        <h2 class="mt">Words:</h2>
+        <div id="pa-words" class="words"></div>
+        <p class="legend">
+          <span class="word word--good">good ≥ 80</span>
+          <span class="word word--ok">fair 60–79</span>
+          <span class="word word--bad">poor &lt; 60</span>
+          <span class="word word--omission">omitted</span>
+        </p>
+      </section>
+
+      <div id="pa-status" class="status" hidden></div>
     </section>
   </main>
 
