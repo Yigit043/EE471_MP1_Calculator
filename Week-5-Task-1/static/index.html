@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text-to-Speech</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>🎤 Text-to-Speech</h1>
+    <p class="subtitle">Powered by Azure Cognitive Services</p>
+
+    <label for="tts-text">Enter text to convert to speech:</label>
+    <textarea id="tts-text" rows="5" placeholder="Hello, EE471 class"></textarea>
+
+    <label for="tts-voice">Voice:</label>
+    <select id="tts-voice"></select>
+
+    <div class="buttons">
+      <button id="tts-speak" class="btn btn--primary">🔊 Synthesize Speech</button>
+      <button id="tts-clear" class="btn btn--light">Clear</button>
+    </div>
+
+    <div id="tts-status" class="status" hidden></div>
+
+    <section id="tts-result" class="result" hidden>
+      <h2>Generated Audio:</h2>
+      <audio id="tts-audio" controls></audio>
+      <a id="tts-download" class="btn btn--blue" download="speech.wav">⬇️ Download Audio</a>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
