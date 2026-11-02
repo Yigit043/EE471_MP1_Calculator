@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Library</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="page">
+    <h1>Library</h1>
+
+    <!-- Mini Project 2: voice librarian -->
+    <section class="voice" aria-label="Voice librarian">
+      <button id="mic" class="mic" title="Talk to the librarian" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="9" y="3" width="6" height="11" rx="3"></rect>
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path>
+        </svg>
+      </button>
+      <div class="voice__body">
+        <div id="voice-status" class="voice__status">Press the microphone and say, for example, “check out item 3”.</div>
+        <form id="voice-form" class="voice__form">
+          <input id="voice-text" type="text" placeholder="…or type a command: list available books">
+          <button class="btn btn--ghost" type="submit">Send</button>
+        </form>
+        <ol id="voice-log" class="voice__log"></ol>
+      </div>
+    </section>
+
+    <!-- Error area: shows API error messages (e.g. 409 on delete) -->
+    <div id="error-area" class="error-area" hidden></div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <label class="toggle">
+        <input type="checkbox" id="filter-available">
+        Available only
+      </label>
+      <div class="segmented" id="filter-type">
+        <button type="button" data-type="" class="is-active">All</button>
+        <button type="button" data-type="book">Book</button>
+        <button type="button" data-type="dvd">DVD</button>
+      </div>
+    </div>
+
+    <!-- Add / Edit form -->
+    <form id="item-form" class="form">
+      <strong id="form-title">Add item</strong>
+      <div class="form-row">
+        <input type="text"   id="f-title"  placeholder="Title">
+        <input type="text"   id="f-author" placeholder="Author">
+        <select id="f-type">
+          <option value="book">Book</option>
+          <option value="dvd">DVD</option>
+        </select>
+        <input type="number" id="f-extra" placeholder="Page count">
+        <button type="submit" id="f-submit" class="btn btn--primary">Add</button>
+        <button type="button" id="f-cancel" class="btn btn--ghost" hidden>Cancel</button>
+      </div>
+    </form>
+
+    <!-- Item list -->
+    <div id="item-list" class="item-list"></div>
+
+    <!-- Empty state -->
+    <div id="empty-state" class="empty-state" hidden>
+      No items yet. Add your first book or DVD above.
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script src="vendor/speech-sdk-1.51.0.min.js"></script>
+  <script src="voice.js"></script>
+</body>
+</html>
