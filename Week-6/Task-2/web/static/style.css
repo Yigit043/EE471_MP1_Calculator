@@ -1,0 +1,70 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px 16px;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+  color: #333;
+}
+
+.card {
+  width: 560px;
+  max-width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+h1 { margin: 0; text-align: center; font-size: 30px; }
+h2 { margin: 0 0 12px; font-size: 22px; }
+.subtitle { margin: 0; text-align: center; color: #666; }
+
+.drop {
+  display: grid;
+  place-items: center;
+  min-height: 220px;
+  border: 3px dashed #f0b27a;
+  border-radius: 14px;
+  background: #fff8f2;
+  cursor: pointer;
+  overflow: hidden;
+}
+.drop input { display: none; }
+.drop img { max-width: 100%; max-height: 320px; display: block; }
+#drop-text { color: #a0522d; font-weight: 600; }
+
+.buttons { display: flex; gap: 12px; }
+.btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn--primary { background: linear-gradient(135deg, #f39c12, #e67e22); color: #fff; }
+.btn--light   { background: #f0f0f0; color: #333; }
+
+.status { padding: 12px; border-radius: 10px; text-align: center; font-weight: 600; }
+.status--busy  { background: #fff4e5; color: #b9770e; border: 1px solid #f8d7a8; }
+.status--ok    { background: #e8f8e8; color: #2e9e2e; border: 1px solid #bfe8bf; }
+.status--error { background: #fdecea; color: #c62828; border: 1px solid #f5c2c0; }
+
+.result { background: #fffaf5; border: 2px solid #f8e0c8; border-radius: 12px; padding: 20px; }
+.bars { display: flex; flex-direction: column; gap: 8px; }
+.bar { display: grid; grid-template-columns: 120px 1fr 52px; gap: 10px; align-items: center; font-size: 14px; }
+.bar__track { height: 14px; background: #f1e4d8; border-radius: 7px; overflow: hidden; }
+.bar__fill { height: 100%; background: linear-gradient(90deg, #f39c12, #e67e22); }
+.bar__value { text-align: right; font-weight: 600; }
+.detail { margin: 12px 0 0; color: #777; font-size: 13px; }

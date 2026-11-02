@@ -1,0 +1,25 @@
+# Week 6 - Task 2: cat-kind classifier = Cog model container + website container.
+# First build the model image with Cog (inside WSL/Ubuntu, in ./cog-model):
+#     cog build -t cat-classifier
+# Then, from this folder:   docker compose up --build
+#   website          -> http://localhost:5003
+#   Cog model API    -> http://localhost:5002/predictions   (for Postman)
+name: week6-task2
+
+services:
+  cat-model:
+    image: cat-classifier          # built by `cog build -t cat-classifier`
+    ports:
+      - "5002:5000"                # Cog serves its HTTP API on port 5000 inside the container
+    restart: unless-stopped
+
+  web:
+    build: ./web
+    image: ee471/cat-website
+    ports:
+      - "5003:5000"
+    environment:
+      COG_URL: http://cat-model:5000/predictions   # containers reach each other by service name
+    depends_on:
+      - cat-model
+    restart: unless-stopped

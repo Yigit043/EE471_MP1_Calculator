@@ -1,0 +1,5 @@
+# Files Cog should not copy into the image
+__pycache__/
+*.pyc
+test-images/
+*.json

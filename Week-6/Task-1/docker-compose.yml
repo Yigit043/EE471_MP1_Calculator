@@ -1,0 +1,24 @@
+name: week6-task1
+
+# Week 6 - Task 1: the two Week 5 apps, each in its own container.
+# Run from this folder:   docker compose up --build
+#   speech website   -> http://localhost:5000
+#   voice calculator -> http://localhost:5001
+services:
+  speech-website:
+    build: ./speech-website
+    image: ee471/speech-website
+    ports:
+      - "5000:5000"          # host:container
+    env_file:
+      - ../../.env           # SPEECH_KEY and SPEECH_REGION from the repo root (never baked into the image)
+    restart: unless-stopped
+
+  voice-calculator:
+    build: ./voice-calculator
+    image: ee471/voice-calculator
+    ports:
+      - "5001:5000"
+    env_file:
+      - ../../.env
+    restart: unless-stopped

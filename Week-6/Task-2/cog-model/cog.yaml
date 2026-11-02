@@ -1,0 +1,11 @@
+# Cog configuration for the cat-kind classifier (Week 6 - Task 2).
+# Based on the pre-trained ResNet50 model from Cog's "Getting started" guide.
+build:
+  python_version: "3.13"
+  python_requirements: requirements.txt
+  run:
+    # Download the pre-trained ResNet50 weights while building, so they are baked into the
+    # image: the container then starts without internet and does not download on every start.
+    - 'TORCH_HOME=/opt/torch python -c "from torchvision import models; models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)"'
+# The class Cog calls for every prediction
+run: "run.py:Runner"

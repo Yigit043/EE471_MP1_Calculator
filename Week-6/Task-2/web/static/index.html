@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cat Kind Classifier</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1>🐱 Cat Kind Classifier</h1>
+    <p class="subtitle">Upload a photo of a cat – a ResNet50 model running in a Cog container tells you what kind of cat it is.</p>
+
+    <label class="drop" for="image">
+      <input id="image" type="file" accept="image/*">
+      <img id="preview" alt="" hidden>
+      <span id="drop-text">📷 Click to choose a cat photo</span>
+    </label>
+
+    <div class="buttons">
+      <button id="classify" class="btn btn--primary" disabled>🔍 Classify</button>
+      <button id="clear" class="btn btn--light">Clear</button>
+    </div>
+
+    <div id="status" class="status" hidden></div>
+
+    <section id="result" class="result" hidden>
+      <h2 id="answer"></h2>
+      <div id="bars" class="bars"></div>
+      <p id="detail" class="detail"></p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# CPU-only PyTorch: same versions as Cog's getting-started guide, but without the
+# ~2.5 GB of NVIDIA GPU libraries (this model runs fine on the CPU).
+--extra-index-url https://download.pytorch.org/whl/cpu
+pillow==11.1.0
+torch==2.6.0+cpu
+torchvision==0.21.0+cpu

@@ -1,0 +1,9 @@
+# Keep the image small and never copy secrets into it
+.env
+__pycache__/
+*.pyc
+*.wav
+*.mp4
+*.avi
+Dockerfile
+.dockerignore

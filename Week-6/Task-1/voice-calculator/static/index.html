@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voice Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="calculator" aria-label="Voice-activated calculator">
+    <!-- Week 5: microphone button on the left -->
+    <div class="mic-col">
+      <button id="mic" class="mic" title="Voice commands" aria-pressed="false">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="9" y="3" width="6" height="11" rx="3"></rect>
+          <path d="M5 11a7 7 0 0 0 14 0M12 18v3"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Week 4 calculator (display + 4 rows) -->
+    <div class="keypad">
+      <output class="display" id="display" aria-live="polite">0</output>
+
+      <div class="row">
+        <button class="key" data-digit="7">7</button>
+        <button class="key" data-digit="8">8</button>
+        <button class="key" data-digit="9">9</button>
+        <button class="key key--op" data-op="/">÷</button>
+      </div>
+      <div class="row">
+        <button class="key" data-digit="4">4</button>
+        <button class="key" data-digit="5">5</button>
+        <button class="key" data-digit="6">6</button>
+        <button class="key key--op" data-op="*">×</button>
+      </div>
+      <div class="row">
+        <button class="key" data-digit="1">1</button>
+        <button class="key" data-digit="2">2</button>
+        <button class="key" data-digit="3">3</button>
+        <button class="key key--op" data-op="-">−</button>
+      </div>
+      <div class="row">
+        <button class="key" data-digit="0">0</button>
+        <button class="key" data-digit=".">.</button>
+        <button class="key key--equals" data-action="equals">=</button>
+        <button class="key key--op" data-op="+">+</button>
+      </div>
+    </div>
+  </main>
+
+  <p id="voice-status" class="voice-status">🎙️ Press the microphone and say e.g. “five”, “plus”, “two”, “is”.</p>
+
+  <script src="vendor/speech-sdk-1.51.0.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
