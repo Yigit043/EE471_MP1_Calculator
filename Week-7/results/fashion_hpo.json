@@ -1,0 +1,128 @@
+{
+  "search": [
+    {
+      "settings": "SGD lr 0.001, batch 64, hidden 512",
+      "config": {
+        "optimizer": "sgd",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.6098,
+      "seconds": 26
+    },
+    {
+      "settings": "SGD lr 0.01, batch 64, hidden 512",
+      "config": {
+        "optimizer": "sgd",
+        "lr": 0.01,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.7882,
+      "seconds": 27
+    },
+    {
+      "settings": "SGD lr 0.1, batch 64, hidden 512",
+      "config": {
+        "optimizer": "sgd",
+        "lr": 0.1,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.8164,
+      "seconds": 26
+    },
+    {
+      "settings": "SGD lr 0.01, momentum 0.9, batch 64, hidden 512",
+      "config": {
+        "optimizer": "sgd",
+        "lr": 0.01,
+        "momentum": 0.9,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.8535,
+      "seconds": 28
+    },
+    {
+      "settings": "ADAM lr 0.0003, batch 64, hidden 512",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.0003,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.8668,
+      "seconds": 58
+    },
+    {
+      "settings": "ADAM lr 0.001, batch 64, hidden 512",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.8709,
+      "seconds": 60
+    },
+    {
+      "settings": "ADAM lr 0.001, batch 128, hidden 512",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 128,
+        "augment": false,
+        "arch": {
+          "hidden": 512
+        }
+      },
+      "val_accuracy": 0.8687,
+      "seconds": 39
+    },
+    {
+      "settings": "ADAM lr 0.001, batch 64, hidden 1024",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "hidden": 1024
+        }
+      },
+      "val_accuracy": 0.8714,
+      "seconds": 69
+    }
+  ],
+  "best": "ADAM lr 0.001, batch 64, hidden 1024",
+  "final_epochs": 6,
+  "final_val_accuracy": 0.8887,
+  "final_test_accuracy": 0.8773
+}

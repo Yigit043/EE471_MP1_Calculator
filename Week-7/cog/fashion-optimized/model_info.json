@@ -1,0 +1,56 @@
+{
+  "dataset": "fashion",
+  "variant": "optimized",
+  "settings": {
+    "optimizer": "adam",
+    "lr": 0.001,
+    "momentum": 0.0,
+    "batch_size": 64,
+    "augment": false,
+    "arch": {
+      "hidden": 1024
+    },
+    "epochs": 6
+  },
+  "test_accuracy": 0.8773,
+  "test_loss": 0.3407,
+  "history": [
+    {
+      "epoch": 1,
+      "val_accuracy": 0.8482
+    },
+    {
+      "epoch": 2,
+      "val_accuracy": 0.8707
+    },
+    {
+      "epoch": 3,
+      "val_accuracy": 0.8714
+    },
+    {
+      "epoch": 4,
+      "val_accuracy": 0.8866
+    },
+    {
+      "epoch": 5,
+      "val_accuracy": 0.887
+    },
+    {
+      "epoch": 6,
+      "val_accuracy": 0.8887
+    },
+    {
+      "epoch": 7,
+      "val_accuracy": 0.8829
+    },
+    {
+      "epoch": 8,
+      "val_accuracy": 0.8825
+    },
+    {
+      "epoch": 9,
+      "val_accuracy": 0.8815
+    }
+  ],
+  "training_seconds": 232
+}

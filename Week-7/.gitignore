@@ -1,0 +1,4 @@
+# Downloaded datasets (about 200 MB) - train.py downloads them again when needed
+data/
+__pycache__/
+request.json

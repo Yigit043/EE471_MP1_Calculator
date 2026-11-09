@@ -1,0 +1,40 @@
+{
+  "dataset": "fashion",
+  "variant": "baseline",
+  "settings": {
+    "optimizer": "sgd",
+    "lr": 0.001,
+    "momentum": 0.0,
+    "batch_size": 64,
+    "epochs": 5,
+    "augment": false,
+    "arch": {
+      "hidden": 512
+    }
+  },
+  "test_accuracy": 0.6489,
+  "test_loss": 1.0759,
+  "history": [
+    {
+      "epoch": 1,
+      "test_accuracy": 0.5029
+    },
+    {
+      "epoch": 2,
+      "test_accuracy": 0.6013
+    },
+    {
+      "epoch": 3,
+      "test_accuracy": 0.6173
+    },
+    {
+      "epoch": 4,
+      "test_accuracy": 0.6363
+    },
+    {
+      "epoch": 5,
+      "test_accuracy": 0.6489
+    }
+  ],
+  "training_seconds": 55
+}

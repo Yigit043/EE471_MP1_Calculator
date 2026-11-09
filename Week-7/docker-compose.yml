@@ -1,0 +1,55 @@
+# Week 7: two classifier websites, each comparing a baseline and an optimized Cog model.
+# First build the four model images with Cog (inside WSL/Ubuntu), e.g. in cog/fashion-baseline:
+#     cog build -t fashion-baseline
+# Then start one website with its two models:
+#     docker compose up --build fashion-web     -> http://localhost:5012
+#     docker compose up --build cifar10-web     -> http://localhost:5022
+# Cog APIs for Postman: fashion 5010 (baseline) / 5011 (optimized), cifar10 5020 / 5021.
+name: week7
+
+services:
+  # ---------------- Task 1: Fashion-MNIST garment classifier
+  fashion-baseline:
+    image: fashion-baseline            # built by `cog build -t fashion-baseline`
+    ports:
+      - "5010:5000"                    # Cog serves its HTTP API on port 5000 inside the container
+  fashion-optimized:
+    image: fashion-optimized
+    ports:
+      - "5011:5000"
+  fashion-web:
+    build: ./web
+    image: ee471/classifier-website
+    ports:
+      - "5012:5000"
+    environment:
+      DATASET: fashion
+      PAGE_TITLE: "👕 Garment Classifier"
+      BASELINE_URL: http://fashion-baseline:5000/predictions     # containers reach each other by name
+      OPTIMIZED_URL: http://fashion-optimized:5000/predictions
+    depends_on:
+      - fashion-baseline
+      - fashion-optimized
+
+  # ---------------- Task 2: CIFAR-10 classifier
+  cifar10-baseline:
+    image: cifar10-baseline
+    ports:
+      - "5020:5000"
+  cifar10-optimized:
+    image: cifar10-optimized
+    ports:
+      - "5021:5000"
+  cifar10-web:
+    build: ./web
+    image: ee471/classifier-website
+    ports:
+      - "5022:5000"
+    environment:
+      DATASET: cifar10
+      PAGE_TITLE: "🚗 CIFAR-10 Classifier"
+      BASELINE_URL: http://cifar10-baseline:5000/predictions
+      OPTIMIZED_URL: http://cifar10-optimized:5000/predictions
+    depends_on:
+      - cifar10-baseline
+      - cifar10-optimized

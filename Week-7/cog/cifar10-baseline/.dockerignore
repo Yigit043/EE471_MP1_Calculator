@@ -1,0 +1,3 @@
+# Files Cog should not copy into the image
+__pycache__/
+*.pyc

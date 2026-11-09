@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Classifier</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="card">
+    <h1 id="title">Image Classifier</h1>
+    <p class="subtitle">Upload an image – two models running in Cog containers classify it side by side:
+      the <b>baseline</b> (tutorial settings) and the <b>optimized</b> model (after hyperparameter optimization).</p>
+    <p class="classes" id="classes"></p>
+
+    <label class="drop" for="image">
+      <input id="image" type="file" accept="image/*">
+      <img id="preview" alt="" hidden>
+      <span id="drop-text">📷 Click to choose an image</span>
+    </label>
+
+    <div class="buttons">
+      <button id="classify" class="btn btn--primary" disabled>🔍 Classify with both models</button>
+      <button id="clear" class="btn btn--light">Clear</button>
+    </div>
+
+    <div id="status" class="status" hidden></div>
+
+    <section id="compare" class="compare" hidden>
+      <article class="model" id="baseline">
+        <h2>Baseline</h2>
+        <p class="meta"></p>
+        <p class="answer"></p>
+        <div class="bars"></div>
+      </article>
+      <article class="model model--best" id="optimized">
+        <h2>Optimized</h2>
+        <p class="meta"></p>
+        <p class="answer"></p>
+        <div class="bars"></div>
+      </article>
+    </section>
+    <p id="verdict" class="verdict" hidden></p>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
