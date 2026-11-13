@@ -1,0 +1,28 @@
+{
+  "dataset": "cifar10",
+  "variant": "baseline",
+  "settings": {
+    "optimizer": "sgd",
+    "lr": 0.001,
+    "momentum": 0.9,
+    "batch_size": 4,
+    "epochs": 2,
+    "augment": false,
+    "arch": {
+      "width": 1
+    }
+  },
+  "test_accuracy": 0.5355,
+  "test_loss": 1.2813,
+  "history": [
+    {
+      "epoch": 1,
+      "test_accuracy": 0.4927
+    },
+    {
+      "epoch": 2,
+      "test_accuracy": 0.5355
+    }
+  ],
+  "training_seconds": 140
+}
