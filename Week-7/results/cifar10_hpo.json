@@ -1,0 +1,98 @@
+{
+  "search": [
+    {
+      "settings": "SGD lr 0.001, momentum 0.9, batch 4, width 1",
+      "config": {
+        "optimizer": "sgd",
+        "lr": 0.001,
+        "momentum": 0.9,
+        "batch_size": 4,
+        "augment": false,
+        "arch": {
+          "width": 1
+        }
+      },
+      "val_accuracy": 0.5832,
+      "seconds": 133
+    },
+    {
+      "settings": "SGD lr 0.01, momentum 0.9, batch 32, width 1",
+      "config": {
+        "optimizer": "sgd",
+        "lr": 0.01,
+        "momentum": 0.9,
+        "batch_size": 32,
+        "augment": false,
+        "arch": {
+          "width": 1
+        }
+      },
+      "val_accuracy": 0.5646,
+      "seconds": 50
+    },
+    {
+      "settings": "ADAM lr 0.001, batch 64, width 1",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "width": 1
+        }
+      },
+      "val_accuracy": 0.5734,
+      "seconds": 53
+    },
+    {
+      "settings": "ADAM lr 0.001, batch 64, width 2",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": false,
+        "arch": {
+          "width": 2
+        }
+      },
+      "val_accuracy": 0.617,
+      "seconds": 61
+    },
+    {
+      "settings": "ADAM lr 0.001, batch 64, width 2, augmentation",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.001,
+        "momentum": 0.0,
+        "batch_size": 64,
+        "augment": true,
+        "arch": {
+          "width": 2
+        }
+      },
+      "val_accuracy": 0.5826,
+      "seconds": 77
+    },
+    {
+      "settings": "ADAM lr 0.002, batch 128, width 2, augmentation",
+      "config": {
+        "optimizer": "adam",
+        "lr": 0.002,
+        "momentum": 0.0,
+        "batch_size": 128,
+        "augment": true,
+        "arch": {
+          "width": 2
+        }
+      },
+      "val_accuracy": 0.5968,
+      "seconds": 72
+    }
+  ],
+  "best": "ADAM lr 0.001, batch 64, width 2",
+  "final_epochs": 8,
+  "final_val_accuracy": 0.6972,
+  "final_test_accuracy": 0.6752
+}
