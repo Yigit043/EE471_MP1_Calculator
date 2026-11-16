@@ -1,0 +1,12 @@
+# Cog configuration for Task 3 (face direction).
+build:
+  python_version: "3.13"
+  python_requirements: requirements.txt
+  system_packages:          # libraries OpenCV needs inside a Linux container
+    - libgl1
+    - libglib2.0-0
+    - libegl1
+    - libgles2
+  run:                      # download the face model once, while the image is built
+    - mkdir -p /models && python -c "import urllib.request; urllib.request.urlretrieve('https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/latest/face_landmarker.task', '/models/face_landmarker.task')"
+run: "run.py:Runner"

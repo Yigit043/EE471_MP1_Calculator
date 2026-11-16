@@ -1,0 +1,12 @@
+# Cog configuration for Task 2 (which arm is up).
+build:
+  python_version: "3.13"
+  python_requirements: requirements.txt
+  system_packages:          # libraries OpenCV needs inside a Linux container
+    - libgl1
+    - libglib2.0-0
+    - libegl1
+    - libgles2
+  run:                      # download the pose model once, while the image is built
+    - mkdir -p /models && python -c "import urllib.request; urllib.request.urlretrieve('https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task', '/models/pose_landmarker_lite.task')"
+run: "run.py:Runner"
