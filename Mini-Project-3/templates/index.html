@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Imagine · Chat &amp; Create</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="app">
+    <!-- Title + icon -->
+    <header class="top">
+      <div class="title box">
+        <div class="name">Imagine</div>
+        <div id="status" class="status loading">Loading models…</div>
+      </div>
+      <div class="icon round" title="Imagine"><svg viewBox="432 60 28 28" width="24" height="24" aria-hidden="true"><path d="M446 62 L449 71 L458 74 L449 77 L446 86 L443 77 L434 74 L443 71 Z" fill="#fff"/></svg></div>
+    </header>
+
+    <!-- Image output box + paint button -->
+    <section id="imageBox" class="image-box box">
+      <div id="imageHint" class="hint">Your image will appear here</div>
+      <img id="output" alt="Generated image" hidden>
+      <span id="imageInfo" class="badge" hidden></span>
+      <a id="download" class="badge right" download="imagine.png" hidden>Download</a>
+      <button id="generate" class="paint round" title="Generate the image"><svg viewBox="430 405 32 32" width="26" height="26" aria-hidden="true"><path d="M446 407 C454 407 460 412 460 419 C460 424 456 425 453 425 C450 425 449 427 450 429 C451 432 449 434 446 434 C438 434 432 427 432 420 C432 413 438 407 446 407 Z" fill="#fff"/><circle cx="440" cy="415" r="2.6" fill="#8B5CF6"/><circle cx="447" cy="413" r="2.6" fill="#EC4899"/><circle cx="453" cy="417" r="2.6" fill="#F59E0B"/><circle cx="439" cy="423" r="2.6" fill="#10B981"/></svg></button>
+    </section>
+
+    <!-- Prompt input box -->
+    <textarea id="prompt" class="prompt box" rows="2"
+              placeholder="Prompt: a cozy cabin in a snowy forest at night, warm lights"></textarea>
+
+    <!-- Chat history -->
+    <section id="history" class="history box">
+      <div class="msg bot">Hi! Ask me anything, or ask me to write a prompt for a nice image.</div>
+    </section>
+    <div id="chatInfo" class="info"></div>
+
+    <!-- Mic button, message box, send button -->
+    <footer class="composer">
+      <button id="mic" class="mic round" title="Press to speak, press again to stop"><svg viewBox="52 870 28 32" width="22" height="26" aria-hidden="true"><rect x="61" y="872" width="10" height="17" rx="5" fill="#fff"/><path d="M57 884 C57 891 61 895 66 895 C71 895 75 891 75 884" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/><path d="M66 895 L66 900" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <textarea id="message" class="message box" rows="1" placeholder="Message"></textarea>
+      <button id="send" class="send round" title="Send"><svg viewBox="440 872 30 28" width="24" height="22" aria-hidden="true"><path d="M444 875 L466 886 L444 897 L447 886 Z" fill="#fff"/></svg></button>
+    </footer>
+  </main>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
